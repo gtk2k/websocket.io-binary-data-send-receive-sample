@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>websocket.io サンプル</title>
+    <meta charset="utf-8">
+    <script>
+        function websocketioSample() {
+            var ws = new (window.WebSocket || window.MozWebSocket)('ws://localhost:4502');
+            ws.binaryType = 'arraybuffer';
+            ws.onopen = function () {
+                var binaryData = new Uint8Array(new ArrayBuffer(16));
+                for (var i = 0; i < binaryData.length; i++) {
+                    binaryData[i] = i;
+                }
+                ws.send(binaryData.buffer);
+            }
+            ws.onmessage = function (e) {
+                var binaryData = new Uint8Array(e.data);
+                var ul = document.getElementById('ul');
+                for (var i = 0; i < binaryData.length; i++) {
+                    var li = document.createElement('li');
+                    li.textContent = '[' + i + ']=0x' + binaryData[i].toString(16);
+                    ul.appendChild(li);
+                }
+            }
+            ws.onclose = function () {
+            }
+            ws.onerror = function () {
+            }
+        }
+    </script>
+</head>
+<body onload='websocketioSample()'>
+<span>サーバーエコーデータ</span>
+<ul id='ul'></ul>
+</body>
+</html>
